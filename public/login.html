@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="JS/login.js" defer></script>
+
+<style>
+
+/* Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* 🌿 Light Green Theme */
+:root {
+  --bg: #f6fbf8;
+  --surface: #ffffff;
+  --border: rgba(0,0,0,0.08);
+
+  --accent: #16a34a;
+  --accent-light: #22c55e;
+
+  --text: #1f2937;
+  --muted: #6b7280;
+
+  --error: #ef4444;
+  --success: #16a34a;
+
+  --input-bg: #f9fafb;
+  --input-focus: rgba(22,163,74,0.1);
+}
+
+/* Page */
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+/* Card */
+.card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 36px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+/* Title */
+.title {
+  font-family: 'Syne', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 24px;
+}
+
+/* Field */
+.field {
+  margin-bottom: 18px;
+}
+
+label {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* Inputs */
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--input-bg);
+  outline: none;
+  font-size: 14px;
+}
+
+input:focus {
+  border-color: var(--accent);
+  background: #fff;
+  box-shadow: 0 0 0 3px var(--input-focus);
+}
+
+/* Password wrapper */
+.password-wrapper {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--input-bg);
+}
+
+.password-wrapper input {
+  border: none;
+  flex: 1;
+  background: transparent;
+  padding: 12px;
+}
+
+.password-wrapper button {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-weight: 600;
+  padding: 0 12px;
+  cursor: pointer;
+}
+
+/* Meta info */
+.meta {
+  font-size: 11px;
+  color: var(--muted);
+  text-align: right;
+  margin-top: 4px;
+}
+
+/* Errors */
+.error-message {
+  font-size: 12px;
+  color: var(--error);
+  margin-top: 4px;
+}
+
+/* Button */
+#submitButton {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Alert */
+#alertBanner {
+  margin-top: 14px;
+  padding: 10px;
+  border-radius: 6px;
+  display: none;
+  font-size: 13px;
+}
+
+#alertBanner.error {
+  display: block;
+  background: rgba(239,68,68,0.1);
+  color: var(--error);
+}
+
+#alertBanner.success {
+  display: block;
+  background: rgba(22,163,74,0.1);
+  color: var(--success);
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <h2 class="title">Welcome back</h2>
+
+  <div>
+
+    <!-- Username -->
+    <div class="field">
+      <label>Username</label>
+      <input type="text" id="username" placeholder="Enter username">
+      <div class="meta">
+        <span id="usernameCount"></span>
+      </div>
+      <span id="usernameError" class="error-message"></span>
+    </div>
+
+    <!-- Password -->
+    <div class="field">
+      <label>Password</label>
+
+      <div class="password-wrapper">
+        <input type="password" id="password" placeholder="Enter password">
+        <button type="button" id="togglePassword">Show</button>
+      </div>
+
+      <div class="meta">
+        <span id="passwordCount"></span>
+      </div>
+
+      <span id="passwordError" class="error-message"></span>
+    </div>
+
+    <!-- Submit -->
+    <input type="submit" value="Sign In" id="submitButton">
+
+    <!-- Alert -->
+    <div id="alertBanner"></div>
+
+  </div>
+
+</div>
+
+</body>
+</html>
+

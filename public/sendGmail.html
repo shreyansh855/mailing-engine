@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mailing Engine</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap">
+    <link rel="stylesheet" href="sendGmail.css">
+    <!-- <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool'></script> -->
+    <!-- <script src="JS/verify.js" defer></script> -->
+    <script src="JS/sendGmail.js" defer></script>
+</head>
+<body class="light">
+
+<form id="emailForm">
+
+    <div class="top-bar">
+        <div class="top-controls">
+            <label class="cb-wrap"><input type="checkbox" id="port" > <span>Normal</span></label>
+            <label class="cb-wrap"><input type="checkbox" id="editor" > <span>Editor</span></label>
+            <label class="cb-wrap"><input type="checkbox" id="addGreetings" > <span>Greetings</span></label>
+            <label class="cb-wrap"><input type="checkbox" id="addClosing" > <span>Closing</span></label>
+            <label class="cb-wrap"><input type="checkbox" id="addSuggestions" > <span>Suggestions</span></label>
+            <label class="cb-wrap"><input type="checkbox" id="shouldDelay" > <span>Delay</span></label>
+            <button id="toggleTheme" type="button">🌙 Dark</button>
+            <a class="logout" href="login.html">Logout</a>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" name="firstName" required minlength="3" maxlength="40">
+        </div>
+        <div class="form-group">
+            <label for="sentFrom">Sent From</label>
+            <input type="email" id="sentFrom" name="sentFrom" required maxlength="150">
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group">
+            <label for="appPass">App Password</label>
+            <input type="text" id="appPass" name="appPass" required>
+        </div>
+        <div class="form-group">
+            <label for="subject">
+                Subject
+                <span id="subjectError" class="error-message"></span>
+            </label>
+            <input type="text" id="subject" name="subject" required maxlength="150">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Body</label>
+        <iframe id="bodyFrame" src="basic-rich-text-editor-html-css-js-main/index.html" title="Body"></iframe>
+    </div>
+
+    <div class="bottom-row">
+        <div class="form-group emails-group">
+            <label for="eMails">
+                Bulk Emails &nbsp;
+                <span id="mailCnt" class="mail-cnt">0</span> valid
+                <span id="mailWarn" class="mail-warn"></span>
+            </label>
+            <textarea id="eMails" name="eMails" required oninput="updateMailCount()" placeholder="One email per line"></textarea>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <input type="submit" value="Send Emails" id="submitButton">
+    </div>
+
+</form>
+
+</body>
+</html>
+

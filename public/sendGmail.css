@@ -1,0 +1,276 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+* {
+    font-size: 105%;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 20px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+form {
+    max-width: 860px;
+    margin: 0 auto;
+}
+
+/* ── Top bar ────────────────────────────────────────────── */
+.top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.top-controls {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* Checkbox labels */
+.cb-wrap {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    font-size: 90%;
+    white-space: nowrap;
+}
+
+.cb-wrap input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    accent-color: #4CAF50;
+    cursor: pointer;
+}
+
+/* ── Layout ─────────────────────────────────────────────── */
+.form-group {
+    margin-bottom: 14px;
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.bottom-row {
+    display: flex;
+    gap: 20px;
+}
+
+.emails-group {
+    flex: 1;
+}
+
+/* ── Labels ─────────────────────────────────────────────── */
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    font-size: 95%;
+}
+
+/* ── Inputs & Textarea ──────────────────────────────────── */
+input[type="text"],
+input[type="email"],
+textarea {
+    width: 100%;
+    padding: 9px 11px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: 'Poppins', sans-serif;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+textarea:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+textarea#eMails {
+    height: 200px;
+    resize: vertical;
+}
+
+/* ── iframe editor ──────────────────────────────────────── */
+#bodyFrame {
+    width: 100%;
+    min-height: 45vh;
+    height: fit-content;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 0;
+    margin-top: 4px;
+}
+
+/* ── Mail counter ───────────────────────────────────────── */
+.mail-cnt {
+    font-weight: 700;
+    color: #4CAF50;
+}
+
+.mail-warn {
+    color: red;
+    font-size: 90%;
+}
+
+.error-message {
+    color: red;
+    font-size: 85%;
+    font-weight: 400;
+    margin-left: 6px;
+}
+
+/* ── Buttons & Actions ──────────────────────────────────── */
+.form-actions {
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+input[type="submit"] {
+    padding: 10px 28px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 15px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+input[type="submit"]:hover { background-color: #45a049; }
+input[type="submit"]:active { background-color: #0400ff; }
+input[type="submit"]:disabled { background-color: #888; cursor: not-allowed; }
+
+#toggleTheme {
+    padding: 7px 14px;
+    border: 1px solid #4CAF50;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-size: 88%;
+    font-weight: 600;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+a.logout {
+    background-color: #4CAF50;
+    font-size: 14px;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+a.logout:hover  { background-color: #45a049; }
+a.logout:active { background-color: #0400ff; }
+
+/* ══════════════════════════════════════════════════════════
+   LIGHT MODE
+══════════════════════════════════════════════════════════ */
+body.light {
+    background-color: #fff;
+    color: rgb(36, 36, 36);
+}
+
+body.light label,
+body.light span,
+body.light p,
+body.light h2 {
+    color: rgb(36, 36, 36);
+}
+
+body.light input[type="text"],
+body.light input[type="email"],
+body.light textarea {
+    background-color: #fff;
+    color: rgb(0, 0, 0);
+    border-color: #ccc;
+}
+
+body.light #toggleTheme {
+    background-color: #fff;
+    color: #333;
+    border-color: #4CAF50;
+}
+
+body.light .cb-wrap span { color: rgb(36, 36, 36); }
+
+/* ══════════════════════════════════════════════════════════
+   DARK MODE
+══════════════════════════════════════════════════════════ */
+body.dark {
+    background-color: #000;
+    color: yellow;
+}
+
+body.dark label,
+body.dark span,
+body.dark p,
+body.dark h2 {
+    color: yellow;
+}
+
+body.dark input[type="text"],
+body.dark input[type="email"],
+body.dark textarea {
+    background-color: #292929;
+    color: #ffffff;
+    border-color: #fff;
+}
+
+body.dark input[type="text"]:focus,
+body.dark input[type="email"]:focus,
+body.dark textarea:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3);
+}
+
+body.dark #bodyFrame {
+    border-color: #555;
+}
+
+body.dark #toggleTheme {
+    background-color: #222;
+    color: yellow;
+    border-color: #4CAF50;
+}
+
+body.dark .cb-wrap span { color: yellow; }
+
+body.dark .mail-cnt { color: #4CAF50; }
+
+body.dark input[type="submit"] {
+    background-color: #4CAF50;
+}
+
+body.dark a.logout {
+    background-color: #4CAF50;
+}
+
