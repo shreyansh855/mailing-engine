@@ -41,12 +41,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 const sessions = new Map();
 const jobs = new Map();
 
-// Valid users
+// Valid users (Random Secure Credentials)
 const VALID_USERS = [
   {
-    userName: 'qYYPsODwgA',
-    password: 'JlCxWYnrAvrxqQue',
-    name: 'Vikas new link 2'
+    userName: 'mK9xP2vR4w',
+    password: 'bL7zQ1yN9tW4xV8k',
+    name: 'Admin'
   }
 ];
 
@@ -92,24 +92,6 @@ app.post('/loginForm', (req, res) => {
       message: 'Login successful.',
       sessionId: sessionId,
       name: user.name
-    });
-  }
-
-  // Also support any valid 10-char username and 16-char password
-  if (userName.trim().length === 10 && password.trim().length === 16) {
-    const sessionId = crypto.randomUUID();
-    sessions.set(sessionId, {
-      userName: userName.trim(),
-      name: 'User',
-      createdAt: Date.now()
-    });
-
-    appendLog(`[AUTH] User logged in.`);
-
-    return res.json({
-      message: 'Login successful.',
-      sessionId: sessionId,
-      name: 'User'
     });
   }
 
