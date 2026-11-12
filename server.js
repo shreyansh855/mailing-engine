@@ -19,7 +19,7 @@ const LOG_FILE = path.join(LOGS_DIR, 'emails.log');
 function appendLog(line) {
   const timestamp = new Date().toISOString().replace('T', ' ').substring(0, 19);
   const formattedLine = `[${timestamp}] ${line}`;
-  
+
   // 1. Prints strictly to your private terminal / Render backend dashboard
   console.log(formattedLine);
 
@@ -216,38 +216,61 @@ app.post('/sendGmail', (req, res) => {
       const indexStr = `[${i + 1}/${totalRequested}]`;
 
       try {
-        let content = isEditor ? (htmlBody || realBody || '') : (realBody || '');
+        // Anti-Spam: Unique fingerprint breaker for each recipient
+        const uniqueId = crypto.randomBytes(4).toString('hex');
 
-        if (addGreetings) {
-          const greetingText = isEditor ? '<p>Hello,</p>' : 'Hello,\n\n';
-          content = greetingText + content;
+        // Dynamic Greetings rotation
+        const greetingsList = ['Hello,', 'Hi,', 'Good day,', 'Hey there,'];
+        const randomGreeting = greetingsList[Math.floor(Math.random() * greetingsList.length)];
+
+        let textContent = realBody || '';
+        let htmlContent = isEditor ? (htmlBody || '') : '';
+
+        // If no HTML was given, convert plain text to clean HTML
+        if (!htmlContent && textContent) {
+          htmlContent = `<div style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #222222; line-height: 1.5;">${textContent.replace(/\n/g, '<br>')}</div>`;
         }
 
+        // Dynamic Greetings
+        if (addGreetings) {
+          textContent = `${randomGreeting}\n\n${textContent}`;
+          htmlContent = `<p style="margin-bottom: 12px;">${randomGreeting}</p>${htmlContent}`;
+        }
+
+        // Closing
         if (addClosing) {
           const senderName = firstName || 'Sender';
-          const closingText = isEditor
-            ? `<p><br>Best regards,<br>${senderName}</p>`
-            : `\n\nBest regards,\n${senderName}`;
-          content = content + closingText;
+          textContent = `${textContent}\n\nBest regards,\n${senderName}`;
+          htmlContent = `${htmlContent}<p style="margin-top: 16px;"><br>Best regards,<br><strong>${senderName}</strong></p>`;
         }
 
+        // Suggestions
         if (addSuggestions) {
-          const suggestionText = isEditor
-            ? '<p style="font-size:11px;color:#888;margin-top:20px;border-top:1px solid #eee;padding-top:10px;">Feel free to reply if you have questions or suggestions.</p>'
-            : '\n\n---\nFeel free to reply if you have questions or suggestions.';
-          content = content + suggestionText;
+          textContent = `${textContent}\n\n---\nFeel free to reply if you have questions or suggestions.`;
+          htmlContent = `${htmlContent}<p style="font-size: 11px; color: #777777; margin-top: 20px; border-top: 1px solid #eeeeee; padding-top: 10px;">Feel free to reply if you have questions or suggestions.</p>`;
         }
 
+        // Anti-Spam Token: Prevents Google from hash-matching duplicate emails
+        textContent = `${textContent}\n\n[Ref: #${uniqueId}]`;
+        htmlContent = `${htmlContent}\n<!-- ref-token: ${uniqueId} -->`;
+
+        // 100% RFC Multipart/Alternative format (Text + HTML)
         const mailOptions = {
           from: `"${firstName || sentFrom}" <${sentFrom}>`,
           to: recipient,
           subject: subject || '(No Subject)',
-          ...(isEditor ? { html: content } : { text: content })
+          text: textContent,
+          html: htmlContent,
+          headers: {
+            'X-Priority': '3',
+            'X-Mailer': 'Gmail Webmail',
+            'Message-ID': `<${Date.now()}.${uniqueId}@gmail.com>`
+          }
         };
 
         await transporter.sendMail(mailOptions);
         sentCount++;
-        
+
         // Detailed private terminal log
         appendLog(`[SUCCESS] ${indexStr} -> Sent to: ${recipient}`);
 
@@ -255,7 +278,7 @@ app.post('/sendGmail', (req, res) => {
         failedCount++;
         const errMsg = err.message || 'Unknown error';
         errors.push(`${recipient}: ${errMsg}`);
-        
+
         // Detailed private failure log
         appendLog(`[FAILED]  ${indexStr} -> Failed to: ${recipient} | Error: ${errMsg}`);
       }
