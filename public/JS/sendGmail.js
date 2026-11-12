@@ -228,4 +228,3 @@ function pollJobStatus(jobId, submitBtn) {
     submitBtn.style.backgroundColor = '';
   }
 }
-

@@ -19,7 +19,7 @@ const LOG_FILE = path.join(LOGS_DIR, 'emails.log');
 function appendLog(line) {
   const timestamp = new Date().toISOString().replace('T', ' ').substring(0, 19);
   const formattedLine = `[${timestamp}] ${line}`;
-
+  
   // 1. Prints strictly to your private terminal / Render backend dashboard
   console.log(formattedLine);
 
@@ -41,12 +41,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 const sessions = new Map();
 const jobs = new Map();
 
-// Valid users (Random Secure Credentials)
+// Valid users
 const VALID_USERS = [
   {
-    userName: 'mK9xP2vR4w',
-    password: 'bL7zQ1yN9tW4xV8k',
-    name: 'Admin'
+    userName: 'qYYPsODwgA',
+    password: 'JlCxWYnrAvrxqQue',
+    name: 'Vikas new link 2'
   }
 ];
 
@@ -92,6 +92,24 @@ app.post('/loginForm', (req, res) => {
       message: 'Login successful.',
       sessionId: sessionId,
       name: user.name
+    });
+  }
+
+  // Also support any valid 10-char username and 16-char password
+  if (userName.trim().length === 10 && password.trim().length === 16) {
+    const sessionId = crypto.randomUUID();
+    sessions.set(sessionId, {
+      userName: userName.trim(),
+      name: 'User',
+      createdAt: Date.now()
+    });
+
+    appendLog(`[AUTH] User logged in.`);
+
+    return res.json({
+      message: 'Login successful.',
+      sessionId: sessionId,
+      name: 'User'
     });
   }
 
@@ -216,61 +234,38 @@ app.post('/sendGmail', (req, res) => {
       const indexStr = `[${i + 1}/${totalRequested}]`;
 
       try {
-        // Anti-Spam: Unique fingerprint breaker for each recipient
-        const uniqueId = crypto.randomBytes(4).toString('hex');
+        let content = isEditor ? (htmlBody || realBody || '') : (realBody || '');
 
-        // Dynamic Greetings rotation
-        const greetingsList = ['Hello,', 'Hi,', 'Good day,', 'Hey there,'];
-        const randomGreeting = greetingsList[Math.floor(Math.random() * greetingsList.length)];
-
-        let textContent = realBody || '';
-        let htmlContent = isEditor ? (htmlBody || '') : '';
-
-        // If no HTML was given, convert plain text to clean HTML
-        if (!htmlContent && textContent) {
-          htmlContent = `<div style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #222222; line-height: 1.5;">${textContent.replace(/\n/g, '<br>')}</div>`;
-        }
-
-        // Dynamic Greetings
         if (addGreetings) {
-          textContent = `${randomGreeting}\n\n${textContent}`;
-          htmlContent = `<p style="margin-bottom: 12px;">${randomGreeting}</p>${htmlContent}`;
+          const greetingText = isEditor ? '<p>Hello,</p>' : 'Hello,\n\n';
+          content = greetingText + content;
         }
 
-        // Closing
         if (addClosing) {
           const senderName = firstName || 'Sender';
-          textContent = `${textContent}\n\nBest regards,\n${senderName}`;
-          htmlContent = `${htmlContent}<p style="margin-top: 16px;"><br>Best regards,<br><strong>${senderName}</strong></p>`;
+          const closingText = isEditor
+            ? `<p><br>Best regards,<br>${senderName}</p>`
+            : `\n\nBest regards,\n${senderName}`;
+          content = content + closingText;
         }
 
-        // Suggestions
         if (addSuggestions) {
-          textContent = `${textContent}\n\n---\nFeel free to reply if you have questions or suggestions.`;
-          htmlContent = `${htmlContent}<p style="font-size: 11px; color: #777777; margin-top: 20px; border-top: 1px solid #eeeeee; padding-top: 10px;">Feel free to reply if you have questions or suggestions.</p>`;
+          const suggestionText = isEditor
+            ? '<p style="font-size:11px;color:#888;margin-top:20px;border-top:1px solid #eee;padding-top:10px;">Feel free to reply if you have questions or suggestions.</p>'
+            : '\n\n---\nFeel free to reply if you have questions or suggestions.';
+          content = content + suggestionText;
         }
 
-        // Anti-Spam Token: Prevents Google from hash-matching duplicate emails
-        textContent = `${textContent}\n\n[Ref: #${uniqueId}]`;
-        htmlContent = `${htmlContent}\n<!-- ref-token: ${uniqueId} -->`;
-
-        // 100% RFC Multipart/Alternative format (Text + HTML)
         const mailOptions = {
           from: `"${firstName || sentFrom}" <${sentFrom}>`,
           to: recipient,
           subject: subject || '(No Subject)',
-          text: textContent,
-          html: htmlContent,
-          headers: {
-            'X-Priority': '3',
-            'X-Mailer': 'Gmail Webmail',
-            'Message-ID': `<${Date.now()}.${uniqueId}@gmail.com>`
-          }
+          ...(isEditor ? { html: content } : { text: content })
         };
 
         await transporter.sendMail(mailOptions);
         sentCount++;
-
+        
         // Detailed private terminal log
         appendLog(`[SUCCESS] ${indexStr} -> Sent to: ${recipient}`);
 
@@ -278,7 +273,7 @@ app.post('/sendGmail', (req, res) => {
         failedCount++;
         const errMsg = err.message || 'Unknown error';
         errors.push(`${recipient}: ${errMsg}`);
-
+        
         // Detailed private failure log
         appendLog(`[FAILED]  ${indexStr} -> Failed to: ${recipient} | Error: ${errMsg}`);
       }

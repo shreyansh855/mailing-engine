@@ -33,7 +33,7 @@
       submitButton.value = "Sign In";
     }
 
-    // Live character count (TRIMMED)
+    // ✅ Live character count (TRIMMED)
     function updateCounts() {
       const u = usernameInput.value.trim();
       const p = passwordInput.value.trim();
@@ -45,7 +45,7 @@
     usernameInput.addEventListener("input", updateCounts);
     passwordInput.addEventListener("input", updateCounts);
 
-    // Toggle password visibility
+    // ✅ Toggle password visibility
     togglePassword.addEventListener("click", function () {
       if (passwordInput.type === "password") {
         passwordInput.type = "text";
@@ -110,4 +110,3 @@
     updateCounts(); // initial
   };
 })(this);
-
